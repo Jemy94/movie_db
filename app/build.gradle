@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 //kotlin annotation processor
 apply plugin: 'kotlin-kapt'
+apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
     compileSdkVersion 29
@@ -44,6 +45,9 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:4.1.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.1'
     implementation "com.google.dagger:dagger:2.24"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
+    implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
     kapt "com.google.dagger:dagger-compiler:2.24"
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     kapt 'com.github.bumptech.glide:compiler:4.11.0'

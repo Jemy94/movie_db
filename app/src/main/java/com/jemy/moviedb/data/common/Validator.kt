@@ -37,7 +37,7 @@ class Validator @Inject constructor(private val gson: Gson) {
             gson.fromJson(errorBody?.string(), ErrorResponse::class.java)
         return errorResponse?.let { body ->
             try {
-                if (body.statusMessage.isNotEmpty()) {
+                if (!body.statusMessage.isNullOrBlank()) {
                     Resource<T>(ResourceState.ERROR, message = body.statusMessage)
                 } else {
                     Resource<T>(ResourceState.ERROR, message = Constants.Error.GENERAL)

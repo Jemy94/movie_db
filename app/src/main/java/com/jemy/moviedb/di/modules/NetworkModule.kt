@@ -1,5 +1,7 @@
 package com.jemy.moviedb.di.modules
 
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import com.jemy.moviedb.BuildConfig
 import com.jemy.moviedb.utils.Constants
 import com.squareup.moshi.Moshi
@@ -16,6 +18,9 @@ import javax.inject.Singleton
 
 @Module
 class NetworkModule {
+
+    @Provides
+    @Singleton fun getGson(): Gson = GsonBuilder().setLenient().create()
 
     @Provides
     @Singleton
