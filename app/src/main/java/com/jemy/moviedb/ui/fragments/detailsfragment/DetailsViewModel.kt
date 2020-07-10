@@ -52,11 +52,15 @@ class DetailsViewModel(private val detailsRepository: DetailsRepository) : ViewM
             .doOnSubscribe { _popularImages.setLoading() }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ popularResource ->
-                popularResource?.data?.let { _popularImages.setSuccess(it) }
-                    ?: _popularImages.setError(
-                        popularResource.message
-                    )
+            .subscribe({ popularImages ->
+                popularImages.data.let { response ->
+                    val images = response!!.profiles
+                    if (images.isNullOrEmpty()) {
+                        _popularImages.setError(Constants.Error.NO_DATA)
+                    } else {
+                        _popularImages.setSuccess(response)
+                    }
+                }
             }, { throwable ->
                 _popularImages.setError(Constants.Error.GENERAL)
                 Log.e("DetailsFragment", throwable.message ?: "unknown error")

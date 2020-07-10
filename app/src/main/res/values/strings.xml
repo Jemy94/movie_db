@@ -3,4 +3,8 @@
     <string name="popular_label">Popular</string>
     <string name="details_label">Details</string>
     <string name="general_error">Something went wrong</string>
+    <string name="name">Name:</string>
+    <string name="popularity">Popularity:</string>
+    <string name="department">Department:</string>
+    <string name="there_is_no_images_for_this_person">There is no images for this person</string>
 </resources>

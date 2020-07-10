@@ -20,6 +20,7 @@ import com.jemy.moviedb.data.response.PopularResponse.Popular
 import com.jemy.moviedb.di.component.AppComponent
 import com.jemy.moviedb.di.component.DaggerAppComponent
 import com.jemy.moviedb.ui.fragments.popularfragment.adapter.PopularAdapter
+import com.jemy.moviedb.utils.Constants
 import com.jemy.moviedb.utils.Constants.Error.GENERAL
 import kotlinx.android.synthetic.main.fragment_popular.*
 import javax.inject.Inject
@@ -71,8 +72,11 @@ class PopularFragment : Fragment() {
                         if (popularList.isNotEmpty()) {
                             val adapter = PopularAdapter(popularList)
                             popularRecycler.adapter = adapter
-                            adapter.setItemCallBack { id ->
-                                val bundle = bundleOf("popularId" to id)
+                            adapter.setItemCallBack { popular ->
+                                val bundle = bundleOf(Constants.POPULAR_ID to popular?.id)
+                                bundle.putString(Constants.POPULAR_NAME, popular?.name)
+                                bundle.putString(Constants.POPULAR_DEPARTMENT, popular?.knownForDepartment)
+                                bundle.putDouble(Constants.POPULARITY, popular?.popularity ?: 0.0)
                                 view.findNavController().navigate(
                                     R.id.action_popularFragment_to_detailsFragment,
                                     bundle

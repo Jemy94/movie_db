@@ -11,7 +11,7 @@ import kotlinx.android.synthetic.main.item_popular.view.*
 
 class PopularAdapter(private val list: List<Popular>) : RecyclerView.Adapter<PopularViewHolder>() {
 
-    private var itemCallback: ((Long) -> Unit)? = null
+    private var itemCallback: ((Popular) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_popular, parent, false)
@@ -23,14 +23,14 @@ class PopularAdapter(private val list: List<Popular>) : RecyclerView.Adapter<Pop
         holder.bind(popular)
     }
 
-    fun setItemCallBack(itemCallback: (Long?) -> Unit) {
+    fun setItemCallBack(itemCallback: (Popular?) -> Unit) {
         this.itemCallback = itemCallback
     }
 
     override fun getItemCount(): Int = list.size
 }
 
-class PopularViewHolder(itemView: View, private val itemCallback: ((Long) -> Unit)?) :
+class PopularViewHolder(itemView: View, private val itemCallback: ((Popular) -> Unit)?) :
     RecyclerView.ViewHolder(itemView) {
 
     private var popularName = itemView.popularName
@@ -38,7 +38,7 @@ class PopularViewHolder(itemView: View, private val itemCallback: ((Long) -> Uni
     private var popularImage = itemView.popularImage
 
     fun bind(popular: Popular) {
-        itemView.setOnClickListener { itemCallback?.invoke(popular.id) }
+        itemView.setOnClickListener { itemCallback?.invoke(popular) }
         popularName.text = popular.name
         popularDepartment.text = popular.knownForDepartment
         popular.profilePath?.let { popularImage.load(it) }
