@@ -20,6 +20,7 @@ import com.jemy.moviedb.ui.fragments.popularfragment.PopularViewModel
 import com.jemy.moviedb.ui.fragments.popularfragment.PopularViewModelFactory
 import com.jemy.moviedb.ui.fragments.popularfragment.adapter.PopularAdapter
 import com.jemy.moviedb.utils.Constants
+import com.jemy.moviedb.utils.extensions.toastLong
 import kotlinx.android.synthetic.main.fragment_details.*
 import kotlinx.android.synthetic.main.fragment_popular.*
 import javax.inject.Inject
@@ -68,6 +69,7 @@ class DetailsFragment : Fragment() {
         component = DaggerAppComponent.builder()
             .build()
         component.inject(this)
+
     }
 
     private fun getPopularImages() {
@@ -83,29 +85,27 @@ class DetailsFragment : Fragment() {
                     resource.data?.let { imagesResponse ->
                         val adapter = imagesResponse.profiles?.let { ImagesAdapter(it) }
                         popularImagesGrid.adapter = adapter
-
+                        adapter?.setItemCallBack { profile ->
+                            val bundle = bundleOf(Constants.IMAGE_URL to profile?.filePath)
+                            view.findNavController().navigate(
+                                R.id.action_detailsFragment_to_imageFragment,
+                                bundle
+                            )
+                        }
                     }
                 }
                 ResourceState.ERROR -> {
                     detailsProgressBar.visibility = View.GONE
                     resource.message?.let { msg ->
                         when (msg) {
-                            Constants.Error.GENERAL -> Toast.makeText(
-                                activity,
-                                getString(R.string.general_error),
-                                Toast.LENGTH_LONG
-                            ).show()
+                            Constants.Error.GENERAL -> requireActivity().toastLong(getString(R.string.general_error))
                             Constants.Error.NO_DATA -> {
                                 popularImagesGrid.visibility = View.GONE
                                 noImagesTextView.visibility = View.VISIBLE
                             }
 
                         }
-                    } ?: Toast.makeText(
-                        activity,
-                        getString(R.string.general_error),
-                        Toast.LENGTH_LONG
-                    ).show()
+                    } ?: requireActivity().toastLong(getString(R.string.general_error))
                 }
             }
         })

@@ -24,8 +24,8 @@ class PopularViewModel(private val popularRepository: PopularRepository) : ViewM
     val popular: LiveData<Resource<PopularResponse>>
         get() = _popular
 
-    fun getPopular() {
-        popularRepository.getPopular()
+    fun getPopular(page: Int = 1) {
+        popularRepository.getPopular(page)
             .doOnSubscribe { _popular.setLoading() }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

@@ -9,9 +9,15 @@ import com.jemy.moviedb.data.response.PopularResponse.Popular
 import com.jemy.moviedb.utils.extensions.load
 import kotlinx.android.synthetic.main.item_popular.view.*
 
-class PopularAdapter(private val list: List<Popular>) : RecyclerView.Adapter<PopularViewHolder>() {
+class PopularAdapter : RecyclerView.Adapter<PopularViewHolder>() {
 
     private var itemCallback: ((Popular) -> Unit)? = null
+    var items = mutableListOf<Popular>()
+
+    fun addItems(items: List<Popular>) {
+        this.items.addAll(items)
+
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PopularViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_popular, parent, false)
@@ -19,7 +25,7 @@ class PopularAdapter(private val list: List<Popular>) : RecyclerView.Adapter<Pop
     }
 
     override fun onBindViewHolder(holder: PopularViewHolder, position: Int) {
-        val popular = list[position]
+        val popular = items[position]
         holder.bind(popular)
     }
 
@@ -27,8 +33,9 @@ class PopularAdapter(private val list: List<Popular>) : RecyclerView.Adapter<Pop
         this.itemCallback = itemCallback
     }
 
-    override fun getItemCount(): Int = list.size
+    override fun getItemCount(): Int = items.size
 }
+
 
 class PopularViewHolder(itemView: View, private val itemCallback: ((Popular) -> Unit)?) :
     RecyclerView.ViewHolder(itemView) {

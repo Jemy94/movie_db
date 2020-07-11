@@ -12,8 +12,8 @@ class PopularRepository @Inject constructor(
     private val validator: Validator
 ) {
 
-    fun getPopular(): Single<Resource<PopularResponse>> {
-        return apiInterface.getPopular()
+    fun getPopular(page:Int): Single<Resource<PopularResponse>> {
+        return apiInterface.getPopular(page)
             .map { validator.validateResponse(it) }
             .map { Resource(it.state, if (it.data == null) null else it.data, it.message) }
     }

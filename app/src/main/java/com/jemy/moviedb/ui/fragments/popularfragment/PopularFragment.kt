@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jemy.moviedb.App
 import com.jemy.moviedb.R
 import com.jemy.moviedb.data.common.ResourceState.ERROR
@@ -22,7 +24,9 @@ import com.jemy.moviedb.di.component.DaggerAppComponent
 import com.jemy.moviedb.ui.fragments.popularfragment.adapter.PopularAdapter
 import com.jemy.moviedb.utils.Constants
 import com.jemy.moviedb.utils.Constants.Error.GENERAL
+import com.jemy.moviedb.utils.extensions.toastLong
 import kotlinx.android.synthetic.main.fragment_popular.*
+import okhttp3.internal.notify
 import javax.inject.Inject
 
 class PopularFragment : Fragment() {
@@ -35,6 +39,15 @@ class PopularFragment : Fragment() {
     }
 
     lateinit var component: AppComponent
+    private val adapter = PopularAdapter()
+    private var popularList = mutableListOf<Popular>()
+    private var page = 1
+    private var totalPages = 0
+    private val VISIBLE_THRESHOLD = 10
+    private var lastVisibleItem = 0
+    private var totalItemCount = 0
+    private var loading = false
+    private var isFirstTime = true
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -45,9 +58,9 @@ class PopularFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupInjection()
-        viewModel.getPopular()
         getPopular()
         observePopular(view)
+        setUpInfiniteScroll()
     }
 
     private fun setupInjection() {
@@ -57,7 +70,9 @@ class PopularFragment : Fragment() {
     }
 
     private fun getPopular() {
-        viewModel.getPopular()
+        if (isFirstTime) {
+            viewModel.getPopular()
+        }
     }
 
     private fun observePopular(view: View) {
@@ -67,46 +82,69 @@ class PopularFragment : Fragment() {
                 SUCCESS -> {
                     popularProgressBar.visibility = View.GONE
                     resource.data?.let { popular ->
-                        val popularList = popular.results
+                        //   popularList.addAll(popular.results)
+                        totalPages = popular.totalPages
                         Log.d("Popular", "${popularList.size}")
-                        if (popularList.isNotEmpty()) {
-                            val adapter = PopularAdapter(popularList)
-                            popularRecycler.adapter = adapter
-                            adapter.setItemCallBack { popular ->
-                                val bundle = bundleOf(Constants.POPULAR_ID to popular?.id)
-                                bundle.putString(Constants.POPULAR_NAME, popular?.name)
-                                bundle.putString(Constants.POPULAR_DEPARTMENT, popular?.knownForDepartment)
-                                bundle.putDouble(Constants.POPULARITY, popular?.popularity ?: 0.0)
-                                view.findNavController().navigate(
-                                    R.id.action_popularFragment_to_detailsFragment,
-                                    bundle
-                                )
-                            }
-                        }
+                        setupPopularAdapter()
+                        adapter.addItems(popular.results)
+                        loading = false
+                        isFirstTime = false
+                        setupOnItemClickListener(view)
                     }
                 }
                 ERROR -> {
                     popularProgressBar.visibility = View.GONE
                     resource.message?.let { msg ->
                         when (msg) {
-                            GENERAL -> Toast.makeText(
-                                activity,
-                                getString(R.string.general_error),
-                                Toast.LENGTH_LONG
-                            ).show()
+                            GENERAL -> requireActivity().toastLong(getString(R.string.general_error))
                         }
-                    } ?: Toast.makeText(
-                        activity,
-                        getString(R.string.general_error),
-                        Toast.LENGTH_LONG
-                    ).show()
+                    } ?: requireActivity().toastLong(getString(R.string.general_error))
                 }
             }
         })
     }
 
-    private fun setupPopularAdapter(popularList: List<Popular>) {
+    private fun setupPopularAdapter() {
+        popularRecycler.adapter = adapter
+    }
 
+    private fun setupOnItemClickListener(view: View) {
+        adapter.setItemCallBack { popular ->
+            val bundle = bundleOf(Constants.POPULAR_ID to popular?.id)
+            bundle.putString(Constants.POPULAR_NAME, popular?.name)
+            bundle.putString(
+                Constants.POPULAR_DEPARTMENT,
+                popular?.knownForDepartment
+            )
+            bundle.putDouble(Constants.POPULARITY, popular?.popularity ?: 0.0)
+            view.findNavController().navigate(
+                R.id.action_popularFragment_to_detailsFragment,
+                bundle
+            )
+        }
+    }
+
+    private fun setUpInfiniteScroll() {
+        popularRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                totalItemCount = layoutManager.itemCount
+                lastVisibleItem = layoutManager.findLastVisibleItemPosition()
+
+                if (!loading
+                    && totalItemCount <= (lastVisibleItem + VISIBLE_THRESHOLD)
+                    && page <= totalPages
+                ) {
+                    page++
+                    viewModel.getPopular(page)
+                    loading = true
+                    popularProgressBar.visibility = View.VISIBLE
+                }
+
+            }
+        })
     }
 
 

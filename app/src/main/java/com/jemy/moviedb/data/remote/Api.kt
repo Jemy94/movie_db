@@ -15,6 +15,7 @@ interface ApiInterface {
 
     @GET(Endpoints.POPULAR)
     fun getPopular(
+        @Query("page") page: Int,
         @Query("api_key") apiKey: String = Constants.API_KEY
     ): Single<Response<PopularResponse>>
 

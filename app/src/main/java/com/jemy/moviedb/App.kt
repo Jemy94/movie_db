@@ -8,13 +8,6 @@ import com.jemy.moviedb.di.modules.AppModule
 
 class App : Application() {
 
-//    companion object {
-//
-//        fun get(activity: FragmentActivity): App {
-//            return activity.application as App
-//        }
-//    }
-
     lateinit var component: AppComponent
 
     override fun onCreate() {

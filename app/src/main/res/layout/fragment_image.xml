@@ -3,30 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background_color">
+    android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/popularRecycler"
+    <ImageView
+        android:id="@+id/completeImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="false"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:contentDescription="@null"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/item_popular" />
+        tools:src="@drawable/ic_launcher_background" />
 
-    <ProgressBar
-        android:id="@+id/popularProgressBar"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/saveImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/margin_padding_size_xxlarge"
-        android:indeterminateTint="@color/md_white"
-        android:visibility="gone"
+        android:layout_marginBottom="@dimen/margin_padding_size_medium"
+        android:text="@string/save"
+        android:translationZ="90dp"
+        android:backgroundTint="@color/colorPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,6 +9,7 @@ object Constants {
     const val POPULAR_NAME = "popularName"
     const val POPULAR_DEPARTMENT = "popularDepartment"
     const val POPULARITY = "popularity"
+    const val IMAGE_URL = "imageUrl"
 
     object Error {
         const val GENERAL = "generalError"

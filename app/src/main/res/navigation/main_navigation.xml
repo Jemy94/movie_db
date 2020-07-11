@@ -20,5 +20,14 @@
         android:id="@+id/detailsFragment"
         android:name="com.jemy.moviedb.ui.fragments.detailsfragment.DetailsFragment"
         android:label="@string/details_label"
-        tools:layout="@layout/fragment_details"/>
+        tools:layout="@layout/fragment_details">
+        <action
+            android:id="@+id/action_detailsFragment_to_imageFragment"
+            app:destination="@id/imageFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/imageFragment"
+        android:name="com.jemy.moviedb.ui.fragments.imagefragment.ImageFragment"
+        android:label="@string/image_fragment"
+        tools:layout="@layout/fragment_image"/>
 </navigation>
