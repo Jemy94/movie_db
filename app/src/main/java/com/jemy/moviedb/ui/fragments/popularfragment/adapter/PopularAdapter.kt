@@ -36,7 +36,6 @@ class PopularAdapter : RecyclerView.Adapter<PopularViewHolder>() {
     override fun getItemCount(): Int = items.size
 }
 
-
 class PopularViewHolder(itemView: View, private val itemCallback: ((Popular) -> Unit)?) :
     RecyclerView.ViewHolder(itemView) {
 

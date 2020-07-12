@@ -1,6 +1,5 @@
 package com.jemy.moviedb.data.remote
 
-import com.jemy.moviedb.data.response.PopularDetailsResponse
 import com.jemy.moviedb.data.response.PopularImagesResponse
 import com.jemy.moviedb.data.response.PopularResponse
 import com.jemy.moviedb.utils.Constants
@@ -18,12 +17,6 @@ interface ApiInterface {
         @Query("page") page: Int,
         @Query("api_key") apiKey: String = Constants.API_KEY
     ): Single<Response<PopularResponse>>
-
-    @GET(Endpoints.POPULAR_DETAILS)
-    fun getPopularDetails(
-        @Path("person_id") personId: Long,
-        @Query("api_key") apiKey: String = Constants.API_KEY
-    ): Single<Response<PopularDetailsResponse>>
 
     @GET(Endpoints.POPULAR_IMAGES)
     fun getPopularImages(

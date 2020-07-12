@@ -3,7 +3,6 @@ package com.jemy.moviedb.ui.fragments.detailsfragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.jemy.moviedb.data.repository.DetailsRepository
-import com.jemy.moviedb.ui.fragments.popularfragment.PopularViewModel
 import javax.inject.Inject
 
 class DetailsViewModelFactory @Inject constructor(

@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -13,11 +12,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.jemy.moviedb.App
 import com.jemy.moviedb.R
-import com.jemy.moviedb.data.common.ResourceState.ERROR
-import com.jemy.moviedb.data.common.ResourceState.SUCCESS
-import com.jemy.moviedb.data.common.ResourceState.LOADING
+import com.jemy.moviedb.data.common.ResourceState.*
 import com.jemy.moviedb.data.response.PopularResponse.Popular
 import com.jemy.moviedb.di.component.AppComponent
 import com.jemy.moviedb.di.component.DaggerAppComponent
@@ -26,7 +22,6 @@ import com.jemy.moviedb.utils.Constants
 import com.jemy.moviedb.utils.Constants.Error.GENERAL
 import com.jemy.moviedb.utils.extensions.toastLong
 import kotlinx.android.synthetic.main.fragment_popular.*
-import okhttp3.internal.notify
 import javax.inject.Inject
 
 class PopularFragment : Fragment() {
@@ -39,11 +34,11 @@ class PopularFragment : Fragment() {
     }
 
     lateinit var component: AppComponent
-    private val adapter = PopularAdapter()
+    private val adapter by lazy { PopularAdapter() }
     private var popularList = mutableListOf<Popular>()
     private var page = 1
     private var totalPages = 0
-    private val VISIBLE_THRESHOLD = 10
+    private val VISIBLE_THRESHOLD = 1
     private var lastVisibleItem = 0
     private var totalItemCount = 0
     private var loading = false
@@ -87,6 +82,7 @@ class PopularFragment : Fragment() {
                         Log.d("Popular", "${popularList.size}")
                         setupPopularAdapter()
                         adapter.addItems(popular.results)
+                        adapter.notifyItemRangeChanged(0, adapter.items.size - 1)
                         loading = false
                         isFirstTime = false
                         setupOnItemClickListener(view)
@@ -146,6 +142,4 @@ class PopularFragment : Fragment() {
             }
         })
     }
-
-
 }
